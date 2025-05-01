@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App: Fundamentos de Escalas y Tonalidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados y para asegurar Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Gris claro de fondo */
+        }
+        /* Estilo para resaltar grados */
+        .grado-resaltado {
+            background-color: #dbeafe; /* Azul claro */
+            font-weight: 500;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        /* Mejorar apariencia de selectores */
+        select {
+            appearance: none; /* Ocultar flecha por defecto */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 0.65em auto;
+            padding-right: 2.5rem; /* Espacio para la flecha */
+        }
+        /* Estilo para botones */
+        button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+        button:active {
+            transform: scale(0.98); /* Efecto al presionar */
+        }
+        /* Contenedor principal centrado */
+        .main-container {
+            max-width: 800px; /* Ancho máximo */
+            margin: 2rem auto; /* Centrado y margen superior/inferior */
+            padding: 1.5rem; /* Relleno interno */
+            background-color: white;
+            border-radius: 0.75rem; /* Bordes redondeados */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* Sombra suave */
+        }
+        /* Estilo para las secciones */
+        .section {
+            margin-bottom: 2rem; /* Espacio entre secciones */
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb; /* Borde ligero */
+        }
+        .section-title {
+            font-size: 1.25rem; /* Tamaño del título de sección */
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937; /* Color oscuro para títulos */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="main-container">
+
+        <div class="section">
+            <h2 class="section-title">¡Bienvenido/a! Fundamentos de Escalas y Tonalidad</h2>
+            <p class="text-gray-700 mb-4">
+                ¡Hola! Este es un espacio para explorar los fundamentos esenciales de la música: las escalas y la tonalidad.
+                Estos conceptos son la base para construir cualquier cosa que queremos tocar.
+            </p>
+            <p class="text-gray-600 text-sm">
+                Basado en el taller "Fundamentos de Escalas y Tonalidad Musical".
+            </p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Constructor de Escalas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-end">
+                <div>
+                    <label for="tonic-select" class="block text-sm font-medium text-gray-700 mb-1">Tónica:</label>
+                    <select id="tonic-select" name="tonic" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white">
+                        <option value="C">C</option>
+                        <option value="C#">C#</option>
+                        <option value="Db">Db</option>
+                        <option value="D">D</option>
+                        <option value="D#">D#</option>
+                        <option value="Eb">Eb</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="F#">F#</option>
+                        <option value="Gb">Gb</option>
+                        <option value="G">G</option>
+                        <option value="G#">G#</option>
+                        <option value="Ab">Ab</option>
+                        <option value="A">A</option>
+                        <option value="A#">A#</option>
+                        <option value="Bb">Bb</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="scale-type-select" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Escala:</label>
+                    <select id="scale-type-select" name="scale-type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white">
+                        <option value="major">Mayor</option>
+                        <option value="natural_minor">Menor Natural</option>
+                        <option value="harmonic_minor">Menor Armónica</option>
+                        <option value="melodic_minor">Menor Melódica</option>
+                        </select>
+                </div>
+
+                <div class="flex space-x-2">
+                     <button id="generate-scale-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Generar
+                    </button>
+                    <button id="play-scale-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" disabled>
+                        Escuchar
+                    </button>
+                </div>
+            </div>
+
+            <div id="scale-display" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-md min-h-[100px]">
+                <p class="text-gray-500 italic">Selecciona una tónica y un tipo de escala, luego presiona "Generar".</p>
+            </div>
+             <div id="degree-info" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md min-h-[50px] text-sm">
+                 <p class="text-blue-700 italic">Aquí se mostrará información sobre los grados de la escala.</p>
+            </div>
+        </div>
+
+         <div class="section">
+            <h2 class="section-title">Escalas, Tonalidad y Acordes</h2>
+            <p class="text-gray-700 mb-4">
+                El conocimiento de las escalas nos ayuda a definir los acordes. Se pueden construir acordes sobre cada nota (grado) de la escala.
+                La relación entre la tónica y los demás grados define la tonalidad y la función de cada acorde.
+            </p>
+             <div id="chord-display" class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md min-h-[50px]">
+                <p class="text-yellow-700 italic">La información sobre los acordes diatónicos aparecerá aquí después de generar una escala mayor o menor.</p>
+            </div>
+        </div>
+
+         <div class="section">
+            <h2 class="section-title">Práctica y Aplicación</h2>
+            <p class="text-gray-700 mb-4">
+                ¡Es hora de aplicar lo aprendido! Intenta construir escalas en diferentes tonalidades y tócalas en tu instrumento.
+            </p>
+            <div class="bg-green-50 border border-green-200 p-4 rounded-md">
+                 <p class="text-green-700 italic">Próximamente: Ejercicios interactivos y entrenamiento de oído.</p>
+            </div>
+        </div>
+
+         <div class="section">
+            <h2 class="section-title">Conclusiones e Importancia</h2>
+            <p class="text-gray-700">
+                Dominar las escalas es fundamental. Te da libertad para improvisar, componer, entender la armonía y mejorar tu técnica.
+                ¡La práctica constante es la clave! Dedica tiempo regularmente a estudiar y tocar escalas.
+            </p>
+        </div>
+
+        <div id="message-box" class="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md shadow-lg hidden" role="alert">
+            <strong class="font-bold">Error:</strong>
+            <span class="block sm:inline" id="message-text"></span>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Constantes y Datos Musicales ---
+
+        // Nombres de las notas (preferencia por sostenidos para cálculos internos)
+        const ALL_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        // Nombres de las notas con bemoles para visualización
+        const ALL_NOTES_FLAT = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+        // Mapeo de enarmónicos (bemol -> sostenido) para consistencia interna
+        const ENHARMONIC_MAP = { 'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#' };
+
+        // Fórmulas de las escalas (intervalos en semitonos)
+        const SCALE_FORMULAS = {
+            major:          [2, 2, 1, 2, 2, 2, 1], // T T ST T T T ST
+            natural_minor:  [2, 1, 2, 2, 1, 2, 2], // T ST T T ST T T
+            harmonic_minor: [2, 1, 2, 2, 1, 3, 1], // T ST T T ST (T+ST) ST
+            melodic_minor:  [2, 1, 2, 2, 2, 2, 1]  // T ST T T T T ST (Ascendente)
+            // Nota: La melódica descendente suele ser igual a la natural menor.
+            // Por simplicidad, aquí solo implementamos la ascendente.
+        };
+
+        // Nombres de los grados (ejemplo para escala mayor)
+        const MAJOR_DEGREE_NAMES = ['Tónica (I)', 'Supertónica (ii)', 'Mediante (iii)', 'Subdominante (IV)', 'Dominante (V)', 'Submediante (vi)', 'Sensible (vii°)'];
+        // Nombres de los grados (ejemplo para escala menor natural)
+        const NATURAL_MINOR_DEGREE_NAMES = ['Tónica (i)', 'Supertónica (ii°)', 'Mediante (III)', 'Subdominante (iv)', 'Dominante (v)', 'Submediante (VI)', 'Subtónica (VII)'];
+        // Nombres de los grados (ejemplo para escala menor armónica)
+        const HARMONIC_MINOR_DEGREE_NAMES = ['Tónica (i)', 'Supertónica (ii°)', 'Mediante (III+)', 'Subdominante (iv)', 'Dominante (V)', 'Submediante (VI)', 'Sensible (vii°)'];
+         // Nombres de los grados (ejemplo para escala menor melódica ascendente)
+        const MELODIC_MINOR_DEGREE_NAMES = ['Tónica (i)', 'Supertónica (ii)', 'Mediante (III+)', 'Subdominante (IV)', 'Dominante (V)', 'Submediante (vi°)', 'Sensible (vii°)']; // Simplificado
+
+
+        // Calidad de los acordes (tríadas) diatónicos
+        const CHORD_QUALITIES = {
+            major: ['Mayor', 'menor', 'menor', 'Mayor', 'Mayor', 'menor', 'disminuido'],
+            natural_minor: ['menor', 'disminuido', 'Mayor', 'menor', 'menor', 'Mayor', 'Mayor'],
+            harmonic_minor: ['menor', 'disminuido', 'Aumentado', 'menor', 'Mayor', 'Mayor', 'disminuido'],
+            melodic_minor: ['menor', 'menor', 'Aumentado', 'Mayor', 'Mayor', 'disminuido', 'disminuido'] // Ascendente
+        };
+
+        // --- Elementos del DOM ---
+        const tonicSelect = document.getElementById('tonic-select');
+        const scaleTypeSelect = document.getElementById('scale-type-select');
+        const generateBtn = document.getElementById('generate-scale-btn');
+        const playBtn = document.getElementById('play-scale-btn');
+        const scaleDisplay = document.getElementById('scale-display');
+        const degreeInfo = document.getElementById('degree-info');
+        const chordDisplay = document.getElementById('chord-display');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+
+        // --- Estado de la Aplicación ---
+        let currentScaleNotes = []; // Almacena las notas de la escala actual para reproducir
+        let synth; // Sintetizador de Tone.js
+
+        // --- Funciones ---
+
+        /**
+         * Muestra un mensaje en el cuadro de mensajes.
+         * @param {string} message - El mensaje a mostrar.
+         * @param {boolean} isError - Indica si es un mensaje de error (rojo) o informativo (azul, por ejemplo).
+         */
+        function showMessage(message, isError = true) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700', 'bg-blue-100', 'border-blue-400', 'text-blue-700'); // Limpiar clases previas
+
+            if (isError) {
+                messageBox.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                messageBox.querySelector('strong').textContent = 'Error:';
+            } else {
+                // Podríamos añadir un estilo informativo si se necesita
+                messageBox.classList.add('bg-blue-100', 'border-blue-400', 'text-blue-700');
+                 messageBox.querySelector('strong').textContent = 'Info:';
+            }
+
+            messageBox.classList.remove('hidden');
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        /**
+         * Obtiene el índice de una nota en la lista ALL_NOTES.
+         * Maneja enarmónicos bemoles convirtiéndolos a sostenidos.
+         * @param {string} noteName - Nombre de la nota (ej. "C#", "Db", "G").
+         * @returns {number} El índice de la nota (0-11) o -1 si no se encuentra.
+         */
+        function getNoteIndex(noteName) {
+            const normalizedNote = ENHARMONIC_MAP[noteName] || noteName;
+            return ALL_NOTES.indexOf(normalizedNote);
+        }
+
+        /**
+         * Obtiene el nombre de la nota para un índice dado.
+         * Intenta usar el nombre original si es bemol y está disponible.
+         * @param {number} index - Índice de la nota (0-11).
+         * @param {string} preferredName - Nombre preferido (ej. "Db") para intentar mantenerlo.
+         * @returns {string} Nombre de la nota.
+         */
+        function getNoteName(index, preferredName = '') {
+            const sharpName = ALL_NOTES[index % 12];
+            const flatName = ALL_NOTES_FLAT[index % 12];
+
+            // Si el nombre preferido es un bemol y corresponde al índice, usarlo
+            if (preferredName.includes('b') && ENHARMONIC_MAP[preferredName] === sharpName) {
+                return preferredName;
+            }
+            // Si no hay preferencia o no coincide, decidir basado en una heurística simple (evitar E#, B#, Fb, Cb si es posible)
+            // Esta parte podría mejorarse con lógica de armaduras
+            if (flatName.includes('b') && sharpName.length === 1) { // Preferir natural si existe bemol (ej: F vs E#)
+                 return sharpName;
+            }
+             if (sharpName.includes('#') && flatName.length === 1) { // Preferir natural si existe sostenido (ej: C vs B#)
+                 return flatName;
+            }
+            // Por defecto, o si ambos son alterados, usar sostenidos (o bemoles si la tónica era bemol)
+            return preferredName.includes('b') ? flatName : sharpName;
+
+            // Simplificación: Por ahora, solo devolvemos el nombre con sostenido si existe
+            // return ALL_NOTES[index % 12];
+        }
+
+
+        /**
+         * Genera las notas de una escala.
+         * @param {string} tonic - La nota tónica (ej. "G", "Bb").
+         * @param {string} scaleType - El tipo de escala ('major', 'natural_minor', etc.).
+         * @returns {Array<string>} Un array con los nombres de las notas de la escala.
+         */
+        function generateScale(tonic, scaleType) {
+            const tonicIndex = getNoteIndex(tonic);
+            if (tonicIndex === -1) {
+                showMessage(`Tónica inválida: ${tonic}`);
+                return [];
+            }
+
+            const formula = SCALE_FORMULAS[scaleType];
+            if (!formula) {
+                showMessage(`Tipo de escala no soportado: ${scaleType}`);
+                return [];
+            }
+
+            const scaleNotes = [];
+            let currentNoteIndex = tonicIndex;
+
+            // Añadir la tónica
+            scaleNotes.push(getNoteName(currentNoteIndex, tonic)); // Usar tónica original como preferencia
+
+            // Generar el resto de las notas según la fórmula
+            for (const interval of formula) {
+                currentNoteIndex += interval;
+                // Para la nota generada, no tenemos una preferencia clara (bemol/sostenido)
+                // excepto la que pueda derivarse de la tónica.
+                // Usamos la tónica como pista para getNoteName.
+                scaleNotes.push(getNoteName(currentNoteIndex, tonic));
+            }
+
+            return scaleNotes;
+        }
+
+        /**
+         * Actualiza la interfaz con la escala generada.
+         * @param {Array<string>} notes - Array de notas de la escala.
+         * @param {string} scaleType - El tipo de escala.
+         * @param {string} tonic - La tónica.
+         */
+        function displayScale(notes, scaleType, tonic) {
+            if (!notes || notes.length === 0) {
+                scaleDisplay.innerHTML = '<p class="text-red-500 italic">No se pudo generar la escala.</p>';
+                degreeInfo.innerHTML = '<p class="text-gray-500 italic">Información de grados no disponible.</p>';
+                chordDisplay.innerHTML = '<p class="text-gray-500 italic">Información de acordes no disponible.</p>';
+                playBtn.disabled = true;
+                return;
+            }
+
+            // Mostrar notas de la escala
+            scaleDisplay.innerHTML = `
+                <h3 class="font-semibold text-lg mb-2 text-gray-800">Escala ${tonic} ${scaleType.replace('_', ' ')}:</h3>
+                <p class="text-xl font-mono tracking-wider text-indigo-700">${notes.join(' - ')}</p>
+            `;
+
+            // Determinar nombres de grados y calidad de acordes
+            let degreeNames = MAJOR_DEGREE_NAMES; // Por defecto
+            let chordQuals = CHORD_QUALITIES.major; // Por defecto
+            let infoTitle = `Grados y Acordes (Tríadas) en ${tonic} Mayor:`;
+
+            switch (scaleType) {
+                case 'natural_minor':
+                    degreeNames = NATURAL_MINOR_DEGREE_NAMES;
+                    chordQuals = CHORD_QUALITIES.natural_minor;
+                    infoTitle = `Grados y Acordes (Tríadas) en ${tonic} Menor Natural:`;
+                    break;
+                case 'harmonic_minor':
+                    degreeNames = HARMONIC_MINOR_DEGREE_NAMES;
+                    chordQuals = CHORD_QUALITIES.harmonic_minor;
+                     infoTitle = `Grados y Acordes (Tríadas) en ${tonic} Menor Armónica:`;
+                    break;
+                case 'melodic_minor':
+                    degreeNames = MELODIC_MINOR_DEGREE_NAMES;
+                    chordQuals = CHORD_QUALITIES.melodic_minor;
+                     infoTitle = `Grados y Acordes (Tríadas) en ${tonic} Menor Melódica (Asc):`;
+                    break;
+            }
+
+            // Mostrar información de grados
+            let degreeHtml = `<h4 class="font-semibold mb-2 text-blue-800">${infoTitle.split('y Acordes')[0]}</h4><ul class="list-disc list-inside space-y-1">`;
+            notes.slice(0, 7).forEach((note, index) => { // Solo los 7 grados diatónicos
+                degreeHtml += `<li><span class="grado-resaltado">${note}</span>: ${degreeNames[index] || `Grado ${index + 1}`}</li>`;
+            });
+            degreeHtml += '</ul>';
+            degreeInfo.innerHTML = degreeHtml;
+
+             // Mostrar información de acordes
+            let chordHtml = `<h4 class="font-semibold mb-2 text-yellow-800">${infoTitle.split('Grados y')[1]}</h4><ul class="list-disc list-inside space-y-1">`;
+            notes.slice(0, 7).forEach((note, index) => {
+                const quality = chordQuals[index] || 'Desconocido';
+                // Construir nombre del acorde (simplificado, ej: C, Gm, Bdim)
+                let chordName = note;
+                if (quality === 'menor') chordName += 'm';
+                else if (quality === 'disminuido') chordName += '°'; // O 'dim'
+                else if (quality === 'Aumentado') chordName += '+'; // O 'aug'
+                // No añadimos nada para Mayor por convención
+
+                chordHtml += `<li>Grado ${degreeNames[index].match(/\((.*?)\)/)[1] || index + 1}: <span class="font-mono">${chordName}</span> (${quality})</li>`;
+            });
+            chordHtml += '</ul>';
+            chordDisplay.innerHTML = chordHtml;
+
+
+            // Habilitar botón de reproducir
+            playBtn.disabled = false;
+        }
+
+
+        /**
+         * Inicializa el sintetizador de Tone.js.
+         * Se llama una vez cuando el usuario interactúa por primera vez (ej., al hacer clic en 'Generar').
+         */
+        async function initializeAudio() {
+            if (!synth) {
+                try {
+                    await Tone.start(); // Requiere interacción del usuario para iniciar el AudioContext
+                    synth = new Tone.Synth().toDestination();
+                    console.log("AudioContext iniciado y sintetizador creado.");
+                     showMessage("Audio listo.", false); // Mensaje informativo
+                } catch (error) {
+                    console.error("Error al iniciar Tone.js:", error);
+                    showMessage("No se pudo inicializar el audio. Asegúrate de permitir el audio en tu navegador.");
+                    synth = null; // Asegurarse de que no se intente usar
+                }
+            }
+        }
+
+
+        /**
+         * Reproduce la escala actual usando Tone.js.
+         */
+        async function playScale() {
+            if (!synth) {
+                 // Intentar inicializar de nuevo si no existe (puede haber fallado antes)
+                 await initializeAudio();
+                 if (!synth) {
+                    showMessage("El motor de audio no está listo. Intenta generar la escala de nuevo.");
+                    return;
+                 }
+            }
+            if (currentScaleNotes.length === 0) {
+                showMessage("No hay escala generada para reproducir.");
+                return;
+            }
+
+            playBtn.disabled = true; // Deshabilitar mientras suena
+            playBtn.textContent = "Sonando...";
+
+            const now = Tone.now();
+            let timeOffset = 0;
+            // Mapear nombres de nota a formato de Tone.js (incluyendo octava - usamos la 4 por defecto)
+            const notesToPlay = currentScaleNotes.map(note => `${note}4`);
+
+            notesToPlay.forEach((note, index) => {
+                try {
+                    synth.triggerAttackRelease(note, "8n", now + timeOffset); // "8n" = corchea
+                    timeOffset += 0.4; // Tiempo entre notas (ajustable)
+                } catch (error) {
+                     console.error(`Error al reproducir nota ${note}:`, error);
+                     // Intentar con una octava diferente como fallback simple
+                     try {
+                         synth.triggerAttackRelease(note.replace('4','3'), "8n", now + timeOffset);
+                         timeOffset += 0.4;
+                     } catch (fallbackError) {
+                          console.error(`Error en fallback para nota ${note}:`, fallbackError);
+                          // Omitir nota si falla de nuevo
+                     }
+                }
+            });
+
+            // Rehabilitar el botón después de que la secuencia termine
+            Tone.Transport.scheduleOnce(() => {
+                playBtn.disabled = false;
+                 playBtn.textContent = "Escuchar";
+            }, now + timeOffset);
+        }
+
+        // --- Event Listeners ---
+
+        generateBtn.addEventListener('click', async () => {
+            // Inicializar audio en la primera interacción del usuario
+             await initializeAudio();
+
+            const tonic = tonicSelect.value;
+            const scaleType = scaleTypeSelect.value;
+
+            currentScaleNotes = generateScale(tonic, scaleType);
+            displayScale(currentScaleNotes, scaleType, tonic);
+        });
+
+        playBtn.addEventListener('click', playScale);
+
+        // --- Inicialización ---
+        // Generar la escala por defecto (C Mayor) al cargar la página
+        // Se necesita interacción para el audio, así que no lo inicializamos aquí.
+        // currentScaleNotes = generateScale('C', 'major');
+        // displayScale(currentScaleNotes, 'major', 'C');
+        // console.log("Aplicación inicializada. Haz clic en 'Generar' para activar el audio.");
+
+    </script>
+
+</body>
+</html>
